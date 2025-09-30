@@ -1,0 +1,28 @@
+# Core AI libraries
+torch==2.2.2+cu121
+torchvision==0.17.2+cu121
+torchaudio==2.2.2+cu121
+--extra-index-url https://download.pytorch.org/whl/cu121
+
+# Hugging Face stack
+transformers==4.40.0
+accelerate==0.30.0
+
+# LangChain ecosystem
+langchain==0.2.10
+langchain-community==0.2.10
+langchain-huggingface==0.0.3
+
+# Web + Utils
+requests==2.32.3
+beautifulsoup4==4.12.3
+feedparser==6.0.12
+pydantic==2.8.2
+python-dotenv==1.0.1
+
+# Optional API framework
+fastapi==0.115.0
+uvicorn==0.30.1
+
+# Database
+sqlalchemy==2.0.30

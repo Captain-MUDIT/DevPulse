@@ -1,0 +1,45 @@
+/* frontend/DevPulse/src/styles/NewsCard.css */
+.news-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s;
+}
+
+.news-card:hover {
+  transform: translateY(-3px);
+}
+
+.news-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.news-source {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.news-summary {
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}
+
+.news-link {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+  align-self: flex-start;
+}
+
+.news-link:hover {
+  text-decoration: underline;
+}
