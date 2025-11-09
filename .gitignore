@@ -1,0 +1,22 @@
+# Python virtual environment
+myenv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Databases
+*.db
+
+# Node
+frontend/DevPulse/node_modules/
+frontend/DevPulse/.vite/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

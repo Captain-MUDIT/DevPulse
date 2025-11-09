@@ -11,6 +11,7 @@ from transformers import pipeline
 # from langchain_huggingface import HuggingFacePipeline
 # from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 import os
+import torch
 
 # 1.Summarization Model
 def load_summarizer(model_choice: str = "huggingface"):
@@ -25,8 +26,18 @@ def load_summarizer(model_choice: str = "huggingface"):
     """
     
     if model_choice == "huggingface":
-        model_id = "sshleifer/distilbart-cnn-12-6"
-        summarizer = pipeline("summarization", model=model_id, device_map="auto")
+        # Upgraded to bart-large-cnn for better quality summaries
+        # Alternative: "google/pegasus-xsum" for even better quality (slower)
+        model_id = "facebook/bart-large-cnn"
+        # Use device instead of device_map for pipelines to avoid meta tensor issues
+        device = 0 if torch.cuda.is_available() else -1
+        # Enable batching for GPU efficiency
+        summarizer = pipeline(
+            "summarization", 
+            model=model_id, 
+            device=device,
+            batch_size=4 if device == 0 else 1  # Batch size for GPU, 1 for CPU
+        )
         return summarizer
     
     # elif model_choice=="openai":
@@ -77,10 +88,16 @@ def load_zero_shot_classifier():
     """
     global _zero_shot_classifier
     if _zero_shot_classifier is None:
+        # Using bart-large-mnli (good balance)
+        # Alternative: "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli" for better accuracy
+        # Use device instead of device_map for pipelines to avoid meta tensor issues
+        device = 0 if torch.cuda.is_available() else -1
+        # Enable batching for GPU efficiency
         _zero_shot_classifier = pipeline(
             "zero-shot-classification",
             model = "facebook/bart-large-mnli",
-            device_map = "auto"
+            device = device,
+            batch_size=8 if device == 0 else 1  # Batch size for GPU, 1 for CPU
         )
     return _zero_shot_classifier
    

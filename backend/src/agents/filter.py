@@ -8,55 +8,95 @@ Output : same list with 'categories' field populated
 # from transformers import pipeline
 from ..models import load_zero_shot_classifier
 import logging
+import threading
 
 # Initialse looging
 logger = logging.getLogger(__name__)
+
+# Lock for thread-safe model access
+_classifier_lock = threading.Lock()
 
 
 # Categories
 CANDIDATE_LABELS = ["AI", "Startups","Funding","Technology", "Research", "Business", "Patent"]
 
 
-def filter_articles_batch(articles, threshold: float = 0.5, candidate_labels = CANDIDATE_LABELS):
+def filter_articles_batch(articles, threshold: float = 0.5, candidate_labels = CANDIDATE_LABELS, batch_size: int = 8):
     """
-    Filters a batch of articles and assigns.
+    Filters a batch of articles and assigns categories using batch processing for better performance.
 
     Args:
         articles (list): List of articles dicts (should have 'text' field)
         threshold (float): Minimum confidence to accept a category.
         candidate_labels(list): category labels to classify against
+        batch_size (int): Number of articles to process in each batch
     
     Returns 
         List: filtered articles with 'categories' field populated 
     """
     
-    
     classifier = load_zero_shot_classifier()
-    logger.info("Filtering %d articles using zero-shot classifier...", len(articles))
+    logger.info("Filtering %d articles using zero-shot classifier (batch_size=%d)...", len(articles), batch_size)
     
     filtered_articles = []
     
-    for art in articles:
-        text = art.get("text", "")
-        if not text:
+    # Process articles in batches for better performance
+    for i in range(0, len(articles), batch_size):
+        batch = articles[i:i + batch_size]
+        texts = []
+        batch_articles = []
+        
+        # Prepare batch
+        for art in batch:
+            text = art.get("text", "")
+            if text and len(text.strip()) > 50:  # Skip very short texts
+                texts.append(text[:1000])  # Limit text length for classification
+                batch_articles.append(art)
+        
+        if not texts:
             continue
         
         try:
-            # zero shot classification
-            result = classifier(text, candidate_labels = candidate_labels)
+            # Process batch at once for GPU efficiency
+            # The pipeline will handle batching internally
+            with _classifier_lock:
+                # Process all texts in the batch at once
+                results = classifier(texts, candidate_labels=candidate_labels)
             
-            #select labels above threshold
-            selected_labels = [
-                label for label, score in zip(result["labels"], result["scores"])
-                if score>=threshold
-            ]            
-            art["categories"] = selected_labels
+            # Handle both single result and batch results
+            if not isinstance(results, list):
+                results = [results]
             
-            if selected_labels:
-                filtered_articles.append(art)
-        
+            # Process results
+            for result, art in zip(results, batch_articles):
+                try:
+                    selected_labels = [
+                        label for label, score in zip(result["labels"], result["scores"])
+                        if score >= threshold
+                    ]
+                    art["categories"] = selected_labels
+                    
+                    if selected_labels:
+                        filtered_articles.append(art)
+                except Exception as e:
+                    logger.error("Failed to process classification result for article '%s': %s", art.get("title", ""), e)
+                    
         except Exception as e:
-            logger.error("Failed to classify article '%s': %s", art.get("title",""), e)
+            logger.error("Error in batch classification: %s", e)
+            # Fallback to individual processing
+            for art in batch_articles:
+                try:
+                    text = art.get("text", "")[:1000]
+                    result = classifier(text, candidate_labels=candidate_labels)
+                    selected_labels = [
+                        label for label, score in zip(result["labels"], result["scores"])
+                        if score >= threshold
+                    ]
+                    art["categories"] = selected_labels
+                    if selected_labels:
+                        filtered_articles.append(art)
+                except Exception as e2:
+                    logger.error("Failed to classify article '%s': %s", art.get("title", ""), e2)
             
     logger.info("Filtering complete. %d articles passed threshold %.2f", len(filtered_articles), threshold)
     return filtered_articles

@@ -20,6 +20,9 @@ feedparser==6.0.12
 pydantic==2.8.2
 python-dotenv==1.0.1
 
+# Sentence Transformers (for embeddings)
+sentence-transformers==2.7.0
+
 # Optional API framework
 fastapi==0.115.0
 uvicorn==0.30.1

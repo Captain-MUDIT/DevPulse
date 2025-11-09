@@ -1,16 +1,85 @@
-# React + Vite
+# FounderFeed - Modern News Aggregation Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, minimalistic news website interface tailored for founders, tech enthusiasts, and developers.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🎨 **Modern UI Design** - Sleek, minimalistic interface with glassmorphism effects
+- 🌓 **Dark/Light Mode** - Toggle between themes with smooth transitions
+- 📱 **Fully Responsive** - Optimized for mobile, tablet, and desktop
+- 🎭 **Smooth Animations** - Powered by Framer Motion
+- 🔍 **Search & Filter** - Search articles and filter by categories
+- 📊 **Category System** - Business, Tech, Papers, Patents
+- ⚡ **Fast Performance** - Built with React 19 and Vite
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
 
-## Expanding the ESLint configuration
+- Node.js 18+ 
+- npm or yarn
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Installation
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Create a `.env` file (optional, defaults to `http://127.0.0.1:8000`):
+```bash
+cp .env.example .env
+```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+4. Build for production:
+```bash
+npm run build
+```
+
+## Tech Stack
+
+- **React 19** - UI Framework
+- **Vite** - Build tool
+- **Framer Motion** - Animations
+- **React Icons** - Icon library
+- **date-fns** - Date formatting
+
+## Project Structure
+
+```
+src/
+├── components/     # React components
+├── context/        # React context (Theme)
+├── api/            # API utilities
+├── styles/         # CSS stylesheets
+└── App.jsx         # Main app component
+```
+
+## Features in Detail
+
+### Categories
+- **All** - Shows all articles
+- **Business** - Startups, Funding, Business news
+- **Tech** - AI, Technology news
+- **Papers** - Research papers
+- **Patents** - Patent news
+
+### Animations
+- Page load fade-in with staggered cards
+- Smooth hover effects on cards
+- Category tab transitions
+- Scroll animations
+- Theme toggle animation
+
+## Environment Variables
+
+- `VITE_API_URL` - Backend API URL (default: http://127.0.0.1:8000)
+
+## License
+
+MIT
