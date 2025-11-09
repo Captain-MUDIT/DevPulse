@@ -1,4 +1,4 @@
-# FounderFeed - Modern News Aggregation Platform
+# Dev Pulse - Modern News Aggregation Platform
 
 A modern, minimalistic news website interface tailored for founders, tech enthusiasts, and developers.
 
