@@ -1,21 +1,9 @@
-# Hugging Face stack
-transformers==4.40.0
-accelerate==0.30.0
-
-# LangChain ecosystem
-langchain==0.2.10
-langchain-community==0.2.10
-langchain-huggingface==0.0.3
-
 # Web + Utils
 requests==2.32.3
 beautifulsoup4==4.12.3
 feedparser==6.0.12
 pydantic==2.8.2
 python-dotenv==1.0.1
-
-# Sentence Transformers (for embeddings)
-sentence-transformers==2.7.0
 
 # Optional API framework
 fastapi==0.115.0
