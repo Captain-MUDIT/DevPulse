@@ -8,7 +8,7 @@ __pycache__/
 *.pyd
 
 # Databases
-*.db
+.db
 
 # Node
 frontend/DevPulse/node_modules/
