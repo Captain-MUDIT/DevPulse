@@ -48,16 +48,6 @@ npm run build
 - **React Icons** - Icon library
 - **date-fns** - Date formatting
 
-## Project Structure
-
-```
-src/
-├── components/     # React components
-├── context/        # React context (Theme)
-├── api/            # API utilities
-├── styles/         # CSS stylesheets
-└── App.jsx         # Main app component
-```
 
 ## Features in Detail
 
