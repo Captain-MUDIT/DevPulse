@@ -20,3 +20,5 @@ frontend/DevPulse/.vite/
 # OS
 .DS_Store
 Thumbs.db
+
+.env
