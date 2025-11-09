@@ -12,7 +12,10 @@ app = FastAPI(title="DevPulse API")
 # Allow CORS for your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Vite frontend URL
+    allow_origins=[
+        "http://localhost:5173",
+        "https://devpulse.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
