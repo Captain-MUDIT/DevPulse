@@ -4,39 +4,38 @@ A modern, minimalistic news website interface tailored for founders, tech enthus
 
 ## Features
 
-- 🎨 **Modern UI Design** - Sleek, minimalistic interface with glassmorphism effects
-- 🌓 **Dark/Light Mode** - Toggle between themes with smooth transitions
-- 📱 **Fully Responsive** - Optimized for mobile, tablet, and desktop
-- 🎭 **Smooth Animations** - Powered by Framer Motion
-- 🔍 **Search & Filter** - Search articles and filter by categories
-- 📊 **Category System** - Business, Tech, Papers, Patents
-- ⚡ **Fast Performance** - Built with React 19 and Vite
+- **Search & Filter** - Search articles and filter by categories
+- **Category System** - Business, Tech, Papers, Patents
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 
 ### Installation
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
 2. Create a `.env` file (optional, defaults to `http://127.0.0.1:8000`):
+
 ```bash
 cp .env.example .env
 ```
 
 3. Start the development server:
+
 ```bash
 npm run dev
 ```
 
 4. Build for production:
+
 ```bash
 npm run build
 ```
@@ -63,18 +62,12 @@ src/
 ## Features in Detail
 
 ### Categories
+
 - **All** - Shows all articles
 - **Business** - Startups, Funding, Business news
 - **Tech** - AI, Technology news
 - **Papers** - Research papers
 - **Patents** - Patent news
-
-### Animations
-- Page load fade-in with staggered cards
-- Smooth hover effects on cards
-- Category tab transitions
-- Scroll animations
-- Theme toggle animation
 
 ## Environment Variables
 
