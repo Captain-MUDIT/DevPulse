@@ -18,7 +18,38 @@ _classifier_lock = threading.Lock()
 
 
 # Categories
-CANDIDATE_LABELS = ["AI", "Startups","Funding","Technology", "Research", "Business", "Patent"]
+CANDIDATE_LABELS = [
+    # Core AI/Tech
+    "Artificial Intelligence",
+    "Machine Learning",
+    "Technology",
+    "Software Development",
+    "Hardware",
+    
+    # Research & Innovation
+    "Scientific Research",
+    "Innovation",
+    "Patent",
+    "Breakthrough",
+    
+    # Business & Startups
+    "Startups",
+    "Funding",
+    "Business",
+    "Venture Capital",
+    "Entrepreneurship",
+    
+    # Industry & Policy
+    "Industry",
+    "Regulation",
+    "Policy",
+    "Corporate Strategy",
+    
+    # Society & Future Trends
+    "Education",
+    "Sustainability",
+    "Future Trends"
+]
 
 
 def filter_articles_batch(articles, threshold: float = 0.5, candidate_labels = CANDIDATE_LABELS, batch_size: int = 8):

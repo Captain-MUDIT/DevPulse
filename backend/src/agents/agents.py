@@ -24,7 +24,7 @@ def run_pipeline():
 
     # 1. Fetch
     fetcher = Fetcher()
-    articles = fetcher.fetch(limit=20)
+    articles = fetcher.fetch(limit=10)
     logging.info("Fetched %d articles", len(articles))
     
     # 2. Filter
@@ -32,7 +32,7 @@ def run_pipeline():
     logging.info("%d articles after filtering", len(articles))
     
     # 3. Summarize
-    articles = summarize_articles_batch(articles, max_length=100)
+    articles = summarize_articles_batch(articles, max_length=150)
     logging.info("%d articles after summarization", len(articles))
     
     # 4. Save to DB

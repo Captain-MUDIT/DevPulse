@@ -17,7 +17,7 @@ import time
 logger = logging.getLogger(__name__)
 
 class Fetcher:
-    def __init__(self, extract_full_content: bool = True, max_workers: int = 5):
+    def __init__(self, extract_full_content: bool = True, max_workers: int = 10):
         """
         Initialises the Fetcher Agent.
         Loads feed urls from src/config/feed.json
