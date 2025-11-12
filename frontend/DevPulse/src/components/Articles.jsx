@@ -74,8 +74,7 @@
 // export default Articles;
 
 
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import NewsCard from "./NewsCard";
 import { fetchArticles } from "../api/articles";
 
@@ -88,27 +87,35 @@ const Articles = () => {
   const [error, setError] = useState(null);
   const [hasMore, setHasMore] = useState(true);
 
-  // ✅ Load first page ONLY once when site loads
-  useEffect(() => {
-    // Always start at page 1 on mount (no carryover)
-    setPage(1);
-    loadArticles(1, true);
-  }, []); // run once on mount only
+  // prevent double load
+  const initialized = useRef(false);
 
-  // ✅ Unified loader function
+  useEffect(() => {
+    // ✅ hard-reset any cached page
+    try {
+      localStorage.removeItem("page");
+      sessionStorage.removeItem("page");
+    } catch {}
+
+    if (initialized.current) return;
+    initialized.current = true;
+
+    console.log("🔹 Mounting fresh page=1");
+    loadArticles(1, true);
+  }, []);
+
   const loadArticles = async (currentPage, reset = false) => {
     try {
       setLoading(true);
       setError(null);
 
       const data = await fetchArticles(currentPage, PAGE_SIZE);
-
       if (reset) setArticles(data);
-      else setArticles((prev) => [...prev, ...data]);
+      else setArticles(prev => [...prev, ...data]);
 
-      // If we got fewer than PAGE_SIZE, no more data
       if (!data || data.length < PAGE_SIZE) setHasMore(false);
       else setHasMore(true);
+      setPage(currentPage);
     } catch (err) {
       console.error("Error loading articles:", err);
       setError("Failed to load articles.");
@@ -118,15 +125,13 @@ const Articles = () => {
     }
   };
 
-  // ✅ Load next page when button clicked
   const handleLoadMore = () => {
     if (loading || !hasMore) return;
     const nextPage = page + 1;
-    setPage(nextPage);
+    console.log("🔹 Loading next page:", nextPage);
     loadArticles(nextPage);
   };
 
-  // ✅ Render states
   if (loading && articles.length === 0)
     return <p className="text-center text-gray-500">Loading articles...</p>;
 
@@ -144,7 +149,6 @@ const Articles = () => {
         ))}
       </div>
 
-      {/* Load More button */}
       {hasMore && !loading && (
         <button
           onClick={handleLoadMore}
@@ -159,9 +163,7 @@ const Articles = () => {
       )}
 
       {!hasMore && !loading && (
-        <p className="text-center text-gray-500 mt-4">
-          You've reached the end 🎉
-        </p>
+        <p className="text-center text-gray-500 mt-4">You've reached the end 🎉</p>
       )}
     </div>
   );
