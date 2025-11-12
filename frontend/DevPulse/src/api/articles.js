@@ -52,16 +52,14 @@ const BASE_URL = import.meta.env.VITE_API_URL?.trim().replace(/\/$/, '') || 'htt
  * @param {number} limit
  * @returns {Promise<Array>}
  */
-export async function fetchArticles(limit = 20) {
+export async function fetchArticles(page = 1, limit = 20) {
   try {
-    const response = await fetch(`${BASE_URL}/articles?limit=${limit}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    const response = await fetch(`${BASE_URL}/articles?page=${page}&limit=${limit}`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
     return data;
   } catch (err) {
-    console.error('❌ Error fetching articles:', err);
+    console.error("Error fetching articles:", err);
     throw err;
   }
 }

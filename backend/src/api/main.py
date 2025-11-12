@@ -110,15 +110,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ---------------------------------------------------------------------
-# Logging
-# ---------------------------------------------------------------------
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# ---------------------------------------------------------------------
-# Pydantic Model
-# ---------------------------------------------------------------------
+
 class Article(BaseModel):
     id: str
     title: str
@@ -130,35 +125,35 @@ class Article(BaseModel):
     summary: Optional[str] = None
 
 
-# ---------------------------------------------------------------------
 # Routes
-# ---------------------------------------------------------------------
 @app.get("/")
 def root():
     return {"message": "✅ DevPulse API connected to Supabase via HTTPS"}
 
-
 @app.get("/articles", response_model=List[Article])
-def get_articles(limit: int = 20):
+def get_articles(limit: int = 20, page: int = 1):
     """
-    Fetches articles directly from Supabase using HTTPS API.
+    Paginated article fetch from Supabase.
+    Example: /articles?page=2&limit=20
     """
     try:
-        logger.info(f"Fetching up to {limit} articles from Supabase...")
+        start = (page - 1) * limit
+        end = start + limit - 1  # Supabase uses inclusive range
+        logger.info(f"Fetching articles page={page}, limit={limit} (range {start}-{end})")
+
         response = (
             supabase.table("articles")
             .select("*")
             .order("published", desc=True)
-            .limit(limit)
+            .range(start, end)
             .execute()
         )
 
         if not response.data:
             raise HTTPException(status_code=404, detail="No articles found")
 
-        logger.info(f"✅ Retrieved {len(response.data)} articles.")
         return response.data
 
     except Exception as e:
-        logger.error("Error fetching articles from Supabase: %s", e)
+        logger.error("Error fetching paginated articles: %s", e)
         raise HTTPException(status_code=500, detail="Database error")
