@@ -5,8 +5,13 @@ This package contains agents for:
 -Orchestration pipeline (agents.py)
 """
 
-from .agents import run_pipeline
+from .agents import run_sequential_pipeline, run_parallel_pipeline
 from .filter import filter_articles_batch
 from .summarizer import summarize_articles_batch
 
-__all__ = ["run_pipeline", "filter_articles_batch", "summarize_articles_batch"]
+__all__ = [
+    "run_sequential_pipeline",
+    "run_parallel_pipeline",
+    "filter_articles_batch",
+    "summarize_articles_batch",
+]

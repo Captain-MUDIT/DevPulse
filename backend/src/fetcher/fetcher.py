@@ -17,7 +17,7 @@ import time
 logger = logging.getLogger(__name__)
 
 class Fetcher:
-    def __init__(self, extract_full_content: bool = True, max_workers: int = 10):
+    def __init__(self, extract_full_content: bool = True, max_workers: int = 15):
         """
         Initialises the Fetcher Agent.
         Loads feed urls from src/config/feed.json
@@ -193,7 +193,7 @@ class Fetcher:
         
         return articles
     
-    def fetch(self, limit: int = 50, parallel: bool = True):
+    def fetch(self, limit: int = 30, parallel: bool = True):
         """
         Fetches articles from all feeds with optional parallel processing.
         

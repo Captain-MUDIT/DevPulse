@@ -51,6 +51,37 @@ CANDIDATE_LABELS = [
     "Future Trends"
 ]
 
+CATEGORY_MAP = {
+    # Tech
+    "Artificial Intelligence": "Tech",
+    "Machine Learning": "Tech",
+    "Technology": "Tech",
+    "Software Development": "Tech",
+    "Hardware": "Tech",
+    "Innovation": "Tech",
+    "Future Trends": "Tech",
+    "Industry": "Tech",
+    
+    # Papers / Research
+    "Scientific Research": "Papers",
+    "Education": "Papers",
+    "Breakthrough": "Papers",
+    
+    # Patents
+    "Patent": "Patents",
+    
+    # Business
+    "Startups": "Business",
+    "Funding": "Business",
+    "Business": "Business",
+    "Venture Capital": "Business",
+    "Entrepreneurship": "Business",
+    "Corporate Strategy": "Business",
+    "Regulation": "Business",
+    "Policy": "Business",
+    "Sustainability": "Business"
+}
+
 
 def filter_articles_batch(articles, threshold: float = 0.5, candidate_labels = CANDIDATE_LABELS, batch_size: int = 8):
     """
@@ -105,9 +136,15 @@ def filter_articles_batch(articles, threshold: float = 0.5, candidate_labels = C
                         label for label, score in zip(result["labels"], result["scores"])
                         if score >= threshold
                     ]
-                    art["categories"] = selected_labels
                     
-                    if selected_labels:
+                    #Map categories into 4 lables
+                    mapped_categories = {CATEGORY_MAP.get(label) for label in selected_labels if label in CATEGORY_MAP} 
+                    
+                    mapped_categories = [cat for cat in mapped_categories if cat]
+                    
+                    art["categories"] = mapped_categories
+                    
+                    if mapped_categories:
                         filtered_articles.append(art)
                 except Exception as e:
                     logger.error("Failed to process classification result for article '%s': %s", art.get("title", ""), e)

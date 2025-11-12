@@ -1,59 +1,30 @@
 {
   "feeds": [
- 
     "https://techcrunch.com/feed/",
     "https://www.theverge.com/rss/index.xml",
-    "https://www.engadget.com/rss.xml",
     "https://www.wired.com/feed/rss",
     "https://arstechnica.com/feed/",
-    "https://www.cnet.com/rss/news/",
     "https://thenextweb.com/feed/",
-    "https://gizmodo.com/rss",
     "https://www.zdnet.com/news/rss.xml",
-    "https://www.digitaltrends.com/feed/",
 
-  
     "https://venturebeat.com/category/ai/feed/",
     "https://www.marktechpost.com/feed/",
-    "https://www.technologyreview.com/feed/",
-    "https://www.analyticsvidhya.com/blog/feed/",
-    "https://www.kdnuggets.com/feed",
     "https://ai.googleblog.com/feeds/posts/default",
     "https://openai.com/research/feed.xml",
-    "https://deepmind.google/discover/rss/",
-    "https://stability.ai/blog/rss.xml",
-    "https://huggingface.co/blog/feed.xml",
+    "https://arxiv.org/rss/cs.AI",
+    "https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml",
 
- 
     "https://yourstory.com/feed",
     "https://inc42.com/feed/",
-    "https://tech.eu/feed/",
-    "https://www.startupdaily.net/feed/",
-    "https://www.siliconrepublic.com/feed",
-    "https://betakit.com/feed/",
     "https://www.fastcompany.com/section/innovation/feed",
 
-
-    "https://www.businessinsider.in/rss",
     "https://economictimes.indiatimes.com/tech/rssfeeds/13357270.cms",
-    "https://www.livemint.com/rss/technology",
-    "https://feeds.bbci.co.uk/news/business/rss.xml",
     "https://feeds.reuters.com/reuters/businessNews",
     "https://www.cnbc.com/id/10001147/device/rss/rss.html",
+    "https://www.livemint.com/rss/technology",
 
-
-    "https://arxiv.org/rss/cs",
-    "https://arxiv.org/rss/cs.AI",
-    "https://www.nature.com/subjects/artificial-intelligence.rss",
-    "https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml",
-    "https://www.nasa.gov/rss/dyn/researchnews.rss",
-    "https://www.eurekalert.org/rss/technology.xml",
-    "https://www.uspto.gov/rss/patents.xml",
     "https://patentlyo.com/feed",
-
-    "https://www.techradar.com/rss",
-    "https://www.indiatoday.in/rss/1206578",
-    "https://www.hindustantimes.com/feeds/rss/technology/rssfeed.xml",
-    "https://www.deccanherald.com/rss-feed/technology-1161183"
+    "https://arxiv.org/rss/cs",
+    "https://www.nature.com/subjects/artificial-intelligence.rss"
   ]
 }

@@ -63,8 +63,10 @@ function ArticleModal({ article, isOpen, onClose }) {
     'Startups': 'Business',
     'Funding': 'Business',
     'Business': 'Business',
+    'Papers' : 'Papers',
     'Research': 'Papers',
-    'Patent': 'Patents'
+    'Patent': 'Patents',
+    'Patents': 'Patents',
   };
 
   const displayCategories = categories

@@ -1,0 +1,5 @@
+# backend\src\api\requirements_render.txt
+fastapi
+uvicorn
+python-dotenv
+psycopg2-binary

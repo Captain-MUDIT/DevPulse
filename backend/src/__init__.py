@@ -6,13 +6,14 @@ This package contains:
 - models (AI models)
 """
 
-from .agents import run_pipeline, filter_articles_batch, summarize_articles_batch
+from .agents import run_sequential_pipeline, run_parallel_pipeline, filter_articles_batch, summarize_articles_batch
 from .fetcher import Fetcher
 from .db import init_db, save_articles_to_db
-from .models import load_summarizer, load_embeddings, _zero_shot_classifier, load_models
+from .models import load_summarizer, load_embeddings, load_zero_shot_classifier, load_models
 
 __all__ = [
-    "run_pipeline",
+    "run_sequential_pipeline",
+    "run_parallel_pipeline",
     "filter_articles_batch",
     "summarize_articles_batch",
     "Fetcher",

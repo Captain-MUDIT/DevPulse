@@ -31,24 +31,24 @@
     
     
 import sqlite3
-
-DB_PATH = "src/db/articles.db"
+import os
+DB_PATH = os.path.join(os.path.dirname(__file__), "articles.db")
 
 def print_summaries(limit=10):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
     cursor.execute(f"""
-        SELECT title, summary, published 
+        SELECT title, summary, published, categories
         FROM articles 
-        ORDER BY published ASC
+        ORDER BY published DESC
         LIMIT {limit};
     """)
     
     articles = cursor.fetchall()
     
-    for i, (title, summary, published) in enumerate(articles, 1):
-        print(f"{i}. {title} ({published})\n")
+    for i, (title, summary, published, categories) in enumerate(articles, 1):
+        print(f"{i}. {title} ({published} {categories})\n")
         print(f"Summary: {summary}\n")
         print("-" * 80)
     
