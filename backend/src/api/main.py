@@ -1,38 +1,43 @@
-# backend/src/api/main.py
-
+# # backend/src/api/main.py
 # from fastapi import FastAPI, HTTPException
 # from fastapi.middleware.cors import CORSMiddleware
-# import sqlite3
 # from pydantic import BaseModel
-# from typing import List, Optional
+# from typing import List, Optional, Union
+# import psycopg2
+# from psycopg2.extras import RealDictCursor
 # import os
+# from dotenv import load_dotenv
+# import logging
 
-# app = FastAPI(title="DevPulse API")
+# # Load environment variables
+# load_dotenv()
 
-# # Allow CORS for your frontend
+# # Initialize logging
+# logger = logging.getLogger(__name__)
+
+# app = FastAPI(title="DevPulse API (Supabase)")
+
+# # CORS setup
 # app.add_middleware(
 #     CORSMiddleware,
 #     allow_origins=[
 #         "http://localhost:5173",
-#         "https://devpulse.vercel.app"
+#         "https://devpulse.vercel.app",
+#         "https://devpulse-sigma.vercel.app"
 #     ],
 #     allow_credentials=True,
 #     allow_methods=["*"],
 #     allow_headers=["*"],
 # )
 
-# DB_PATH = os.path.join(os.path.dirname(__file__), "..", "db", "articles.db")
-# DB_PATH = os.path.abspath(DB_PATH)
+# # Database connection URL
+# DATABASE_URL = os.getenv("SUPABASE_DB_URL")
 
-# try:
-#     conn = sqlite3.connect(DB_PATH)
-#     print("Database connection successful!")
-#     conn.close()
-# except Exception as e:
-#     print("Error connecting to DB:", e)
+# def get_connection():
+#     """Connect to Supabase PostgreSQL"""
+#     return psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
 
-
-# # Pydantic model for Article
+# # Pydantic model
 # class Article(BaseModel):
 #     id: str
 #     title: str
@@ -40,79 +45,80 @@
 #     text: str
 #     published: str
 #     source: Optional[str] = None
-#     categories: Optional[str] = None
+#     categories: Optional[Union[str, List[str]]] = None
 #     summary: Optional[str] = None
 
-# # Helper function to fetch articles
-# def fetch_articles(limit: int = 20):
-#     conn = sqlite3.connect(DB_PATH)
-#     cursor = conn.cursor()
-#     cursor.row_factory = sqlite3.Row
-#     try:
-#         cursor.execute(
-#             f"SELECT * FROM articles ORDER BY published DESC LIMIT ?;", (limit,)
-#         )
-#         rows = cursor.fetchall()
-#         articles = [dict(row) for row in rows]
-#         return articles
-#     finally:
-#         conn.close()
-
-# # GET /articles endpoint
-# @app.get("/articles", response_model=List[Article])
-# def get_articles(limit: int = 20):
-#     articles = fetch_articles(limit)
-#     if not articles:
-#         raise HTTPException(status_code=404, detail="No articles found")
-#     return articles
-
-# # Root endpoint for testing
 # @app.get("/")
 # def root():
-#     return {"message": "DevPulse API is running!"}
+#     return {"message": "DevPulse API connected to Supabase PostgreSQL"}
 
+# @app.get("/articles", response_model=List[Article])
+# def get_articles(limit: int = 20):
+#     try:
+#         with get_connection() as conn:
+#             with conn.cursor() as cur:
+#                 cur.execute("SELECT * FROM articles ORDER BY published DESC LIMIT %s;", (limit,))
+#                 articles = cur.fetchall()
+#         if not articles:
+#             raise HTTPException(status_code=404, detail="No articles found")
+#         return articles
+#     except Exception as e:
+#         logger.exception("Database error while fetching articles:")
+#         raise HTTPException(status_code=500, detail="Database error")
 
 
 # backend/src/api/main.py
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List, Optional, Union
-import psycopg2
-from psycopg2.extras import RealDictCursor
+from typing import List, Optional
+from supabase import create_client, Client
 import os
 from dotenv import load_dotenv
 import logging
 
+# ---------------------------------------------------------------------
 # Load environment variables
+# ---------------------------------------------------------------------
 load_dotenv()
 
-# Initialize logging
-logger = logging.getLogger(__name__)
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
-app = FastAPI(title="DevPulse API (Supabase)")
+# Validate env setup
+if not SUPABASE_URL or not SUPABASE_SERVICE_ROLE_KEY:
+    raise RuntimeError("❌ Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in environment variables")
 
-# CORS setup
+# Initialize Supabase client (via HTTPS)
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+
+# ---------------------------------------------------------------------
+# FastAPI App Setup
+# ---------------------------------------------------------------------
+app = FastAPI(title="DevPulse API (Supabase HTTPS)")
+
+# Allow your frontends
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
         "https://devpulse.vercel.app",
-        "https://devpulse-sigma.vercel.app"
+        "https://devpulse-sigma.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Database connection URL
-DATABASE_URL = os.getenv("SUPABASE_DB_URL")
+# ---------------------------------------------------------------------
+# Logging
+# ---------------------------------------------------------------------
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-def get_connection():
-    """Connect to Supabase PostgreSQL"""
-    return psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
-
-# Pydantic model
+# ---------------------------------------------------------------------
+# Pydantic Model
+# ---------------------------------------------------------------------
 class Article(BaseModel):
     id: str
     title: str
@@ -120,23 +126,39 @@ class Article(BaseModel):
     text: str
     published: str
     source: Optional[str] = None
-    categories: Optional[Union[str, List[str]]] = None
+    categories: Optional[str] = None
     summary: Optional[str] = None
 
+
+# ---------------------------------------------------------------------
+# Routes
+# ---------------------------------------------------------------------
 @app.get("/")
 def root():
-    return {"message": "DevPulse API connected to Supabase PostgreSQL"}
+    return {"message": "✅ DevPulse API connected to Supabase via HTTPS"}
+
 
 @app.get("/articles", response_model=List[Article])
 def get_articles(limit: int = 20):
+    """
+    Fetches articles directly from Supabase using HTTPS API.
+    """
     try:
-        with get_connection() as conn:
-            with conn.cursor() as cur:
-                cur.execute("SELECT * FROM articles ORDER BY published DESC LIMIT %s;", (limit,))
-                articles = cur.fetchall()
-        if not articles:
+        logger.info(f"Fetching up to {limit} articles from Supabase...")
+        response = (
+            supabase.table("articles")
+            .select("*")
+            .order("published", desc=True)
+            .limit(limit)
+            .execute()
+        )
+
+        if not response.data:
             raise HTTPException(status_code=404, detail="No articles found")
-        return articles
+
+        logger.info(f"✅ Retrieved {len(response.data)} articles.")
+        return response.data
+
     except Exception as e:
-        logger.exception("Database error while fetching articles:")
+        logger.error("Error fetching articles from Supabase: %s", e)
         raise HTTPException(status_code=500, detail="Database error")
