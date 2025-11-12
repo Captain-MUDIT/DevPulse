@@ -150,8 +150,8 @@ def get_articles(limit: int = 20, page: int = 1):
         )
 
         if not response.data:
-            raise HTTPException(status_code=404, detail="No articles found")
-
+            logger.info("No more articles for page=%s", page)
+            return []
         return response.data
 
     except Exception as e:
