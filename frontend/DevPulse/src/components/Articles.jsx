@@ -73,6 +73,8 @@
 
 // export default Articles;
 
+
+
 // frontend/DevPulse/src/components/Articles.jsx
 import React, { useEffect, useState, useRef } from "react";
 import NewsCard from "./NewsCard";
