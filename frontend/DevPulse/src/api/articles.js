@@ -42,64 +42,45 @@
 //     throw err;
 //   }
 // }
+
+
+
 // frontend/DevPulse/src/api/articles.js
-// Centralized API utility with environment variable support and graceful fallbacks
+const BASE_URL = import.meta.env.VITE_API_URL?.trim().replace(/\/$/, "") || "http://127.0.0.1:8000";
 
-const BASE_URL = import.meta.env.VITE_API_URL?.trim().replace(/\/$/, '') || 'http://127.0.0.1:8000';
-
-/**
- * Fetch all articles (default: 20)
- * @param {number} limit
- * @returns {Promise<Array>}
- */
-export async function fetchArticles(page = 1, limit = 20) {
+async function safeJson(response) {
   try {
-    const response = await fetch(`${BASE_URL}/articles?page=${page}&limit=${limit}`);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
-    return data;
-  } catch (err) {
-    console.error("Error fetching articles:", err);
-    throw err;
+    return await response.json();
+  } catch {
+    return null;
   }
 }
 
-/**
- * Fetch and filter articles by category
- * @param {string} category - e.g. "Tech", "Business", "Papers", "Patents"
- * @param {number} limit
- * @returns {Promise<Array>}
- */
-export async function fetchArticlesByCategory(category, limit = 20) {
+export async function fetchArticles(page = 1, limit = 20) {
+  const url = `${BASE_URL}/articles?page=${page}&limit=${limit}`;
   try {
-    const response = await fetch(`${BASE_URL}/articles?limit=${limit}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    // If server returns 404 for "no articles", treat as empty array
+    if (res.status === 404) return [];
+    if (!res.ok) {
+      const txt = await safeJson(res) || `${res.status} ${res.statusText}`;
+      throw new Error(`HTTP error ${res.status}: ${JSON.stringify(txt)}`);
     }
 
-    const data = await response.json();
-
-    // Filter by category on client-side (in case backend doesn't support it yet)
-    return data.filter(article => {
-      let categories = [];
-
-      try {
-        // Handle cases where categories might be stored as JSON string or list
-        if (typeof article.categories === 'string') {
-          categories = JSON.parse(article.categories);
-        } else if (Array.isArray(article.categories)) {
-          categories = article.categories;
-        }
-      } catch (e) {
-        console.warn('Failed to parse categories:', e);
-        categories = [];
-      }
-
-      // Normalize to case-insensitive match
-      return categories.some(cat => cat.toLowerCase() === category.toLowerCase());
-    });
+    const data = await res.json();
+    if (!Array.isArray(data)) {
+      console.warn("fetchArticles: expected array, got:", data);
+      return [];
+    }
+    return data;
   } catch (err) {
-    console.error(`Error fetching articles by category "${category}":`, err);
+    console.error(`fetchArticles error (${url}):`, err);
     throw err;
   }
 }
