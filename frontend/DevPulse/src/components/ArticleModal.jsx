@@ -125,7 +125,7 @@ function ArticleModal({ article, isOpen, onClose }) {
               {article.text && (
                 <div className="modal-full-text">
                   {article.summary && <h3>Full Article</h3>}
-                  <p>{article.text}</p>
+                  <p>{article.text.split(" ").slice(0, 20).join(" ")}...</p>
                 </div>
               )}
 
