@@ -132,13 +132,9 @@ def root():
 
 @app.get("/articles", response_model=List[Article])
 def get_articles(limit: int = 20, page: int = 1):
-    """
-    Paginated article fetch from Supabase.
-    Example: /articles?page=2&limit=20
-    """
     try:
         start = (page - 1) * limit
-        end = start + limit - 1  # Supabase uses inclusive range
+        end = start + limit - 1
         logger.info(f"Fetching articles page={page}, limit={limit} (range {start}-{end})")
 
         response = (
@@ -149,9 +145,17 @@ def get_articles(limit: int = 20, page: int = 1):
             .execute()
         )
 
+        # ✅ If no data found for this page, fall back to all articles
         if not response.data:
-            logger.info("No more articles for page=%s", page)
-            return []
+            logger.warning(f"No data for page={page} — returning all articles instead.")
+            all_articles = (
+                supabase.table("articles")
+                .select("*")
+                .order("published", desc=True)
+                .execute()
+            )
+            return all_articles.data or []
+
         return response.data
 
     except Exception as e:
