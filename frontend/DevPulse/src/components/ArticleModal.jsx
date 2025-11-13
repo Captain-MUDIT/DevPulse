@@ -132,7 +132,7 @@ function ArticleModal({ article, isOpen, onClose }) {
               {!article.summary && !article.text && (
                 <div className="modal-summary">
                   <p>No content available for this article.</p>
-                </div>
+                </div>  
               )}
             </div>
 
