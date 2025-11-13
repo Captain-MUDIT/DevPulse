@@ -65,7 +65,7 @@ function NewsCard({ article, index, onCardClick }) {
       onClick={() => onCardClick && onCardClick(article)}
       style={{ cursor: 'pointer' }}
     >
-      <div className="news-card-header">
+      {/* <div className="news-card-header">
         <h3 className="news-card-title">{article.title}</h3>
         {displayCategories.length > 0 && (
           <div className="news-card-categories">
@@ -81,10 +81,10 @@ function NewsCard({ article, index, onCardClick }) {
       <p className="news-card-summary">
         {article.summary || article.text?.substring(0, 200) + '...'}
       </p>
-
+        
       <div className="news-card-footer">
         <div className="news-card-meta">
-          <span className="news-card-source">{article.source}</span>
+          <span className="news-card-source">{article.source.substring(0, 20) + '...'}</span>
           <span className="news-card-date">
             <FiClock /> {formatDate(article.published)}
           </span>
@@ -98,7 +98,51 @@ function NewsCard({ article, index, onCardClick }) {
         >
           Read Summary <FiExternalLink />
         </button>
+      </div> */}
+      <div className="news-card-header">
+  <h3 className="news-card-title">{article.title}</h3>
+
+  <div className="news-card-subheader">
+    {/* Categories */}
+    {displayCategories.length > 0 && (
+      <div className="news-card-categories">
+        {displayCategories.map((cat) => (
+          <span key={cat} className="category-badge">
+            {cat}
+          </span>
+        ))}
       </div>
+    )}
+
+    {/* Date */}
+    <span className="news-card-date-inline">
+      <FiClock /> {formatDate(article.published)}
+    </span>
+  </div>
+</div>
+
+{/* Summary */}
+<p className="news-card-summary">
+  {article.summary || article.text?.substring(0, 200) + "..."}
+</p>
+
+{/* Footer */}
+<div className="news-card-footer">
+  <span className="news-card-source">
+    {article.source?.substring(0, 20) || "Unknown"}
+  </span>
+
+  <button
+    className="news-card-link"
+    onClick={(e) => {
+      e.stopPropagation();
+      onCardClick && onCardClick(article);
+    }}
+  >
+    Read Summary <FiExternalLink />
+  </button>
+</div>
+
     </motion.article>
   );
 }

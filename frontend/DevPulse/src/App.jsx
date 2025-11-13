@@ -31,6 +31,7 @@ function App() {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const contentRef = useRef(null);
+  const searchResultsRef = useRef(null);
   
   console.log('App state initialized');
 
@@ -123,6 +124,15 @@ function App() {
     }, 100);
   };
 
+  // Scroll to search results when search term changes
+  useEffect(() => {
+    if (searchTerm && searchResultsRef.current) {
+      setTimeout(() => {
+        searchResultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [searchTerm]);
+
   // Show basic UI even if there's an error
   console.log('App rendering, loading:', loading, 'error:', error, 'articles:', articles.length);
   
@@ -178,8 +188,10 @@ function App() {
             </motion.div>
           ) : (
             <>
-              {heroArticles.length > 0 && <Hero articles={heroArticles} />}
-              <section className="category-feed">
+              {heroArticles.length > 0 && !searchTerm && (
+                <Hero articles={heroArticles} onCardClick={handleCardClick} />
+              )}
+              <section className="category-feed" ref={searchResultsRef}>
                 <motion.h2 
                   className="section-title"
                   initial={{ opacity: 0, x: -20 }}
@@ -187,7 +199,7 @@ function App() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
                 >
-                  {selectedCategory === 'All' ? 'All News' : `${selectedCategory} News`}
+                  {searchTerm ? 'Search Results' : (selectedCategory === 'All' ? 'All News' : `${selectedCategory} News`)}
                 </motion.h2>
                 <NewsGrid articles={gridArticles} onCardClick={handleCardClick} />
               </section>

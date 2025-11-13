@@ -4,7 +4,7 @@ import { FiArrowRight, FiExternalLink } from 'react-icons/fi';
 import { formatDistanceToNow } from 'date-fns';
 import '../styles/Hero.css';
 
-function Hero({ articles }) {
+function Hero({ articles, onCardClick }) {
   // Helper function to format date safely
   const formatDate = (dateString) => {
     if (!dateString) return 'Recently';
@@ -49,6 +49,8 @@ function Hero({ articles }) {
               transition={{ delay: 0.1 * index, duration: 0.5 }}
               whileHover={{ y: -8, scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              onClick={() => onCardClick && onCardClick(article)}
+              style={{ cursor: 'pointer' }}
             >
               <div className="hero-card-content">
                 <h3 className="hero-card-title">{article.title}</h3>
@@ -61,14 +63,15 @@ function Hero({ articles }) {
                     {formatDate(article.published)}
                   </span>
                 </div>
-                <a 
-                  href={article.link} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
+                <button
                   className="hero-card-link"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onCardClick && onCardClick(article);
+                  }}
                 >
-                  Read full article <FiArrowRight />
-                </a>
+                  Read Summary <FiExternalLink />
+                </button>
               </div>
             </motion.article>
           ))}

@@ -7,10 +7,16 @@ import '../styles/ArticleModal.css';
 function ArticleModal({ article, isOpen, onClose }) {
   if (!article) return null;
 
-  // Handle Escape key to close modal and manage body scroll
+  // Handle Escape key, back gesture, and body scroll management
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    const handlePopState = (e) => {
+      if (isOpen) {
         onClose();
       }
     };
@@ -19,11 +25,17 @@ function ArticleModal({ article, isOpen, onClose }) {
       // Prevent body scroll when modal is open
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
+      
+      // Push a dummy state to the history stack so back button/gesture closes the modal
+      window.history.pushState({ modalOpen: true }, '');
+      
       document.addEventListener('keydown', handleEscape);
+      window.addEventListener('popstate', handlePopState);
 
       return () => {
         // Always restore scroll when modal closes
         document.removeEventListener('keydown', handleEscape);
+        window.removeEventListener('popstate', handlePopState);
         document.body.style.overflow = originalOverflow || 'unset';
       };
     } else {
@@ -95,7 +107,7 @@ function ArticleModal({ article, isOpen, onClose }) {
               <FiX />
             </button>
 
-            <div className="modal-header">
+            {/* <div className="modal-header">
               <h2 className="modal-title">{article.title}</h2>
               {displayCategories.length > 0 && (
                 <div className="modal-categories">
@@ -107,12 +119,42 @@ function ArticleModal({ article, isOpen, onClose }) {
                 </div>
               )}
               <div className="modal-meta">
-                <span className="modal-source">{article.source}</span>
+                //  <span className="modal-source">{article.source}</span>
                 <span className="modal-date">
                   <FiClock /> {formatDate(article.published)}
                 </span>
               </div>
-            </div>
+            </div> */}
+
+          <div className="modal-header">
+  <h2 className="modal-title">
+  <a
+    href={article.link}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="modal-title-link"
+    onClick={(e) => e.stopPropagation()}
+  >
+    {article.title}
+  </a>
+</h2>
+
+
+  <div className="meta-row">
+    <div className="meta-left">
+      {displayCategories.map((cat) => (
+        <span key={cat} className="category-badge">
+          {cat}
+        </span>
+      ))}
+    </div>
+
+    <span className="modal-date">
+      <FiClock /> {formatDate(article.published)}
+    </span>
+  </div>
+</div>
+
 
             <div className="modal-body">
               {article.summary && (
@@ -122,12 +164,12 @@ function ArticleModal({ article, isOpen, onClose }) {
                 </div>
               )}
 
-              {article.text && (
+              {/* {article.text && (
                 <div className="modal-full-text">
                   {article.summary && <h3>Full Article</h3>}
                   <p>{article.text.split(" ").slice(0, 20).join(" ")}...</p>
                 </div>
-              )}
+              )} */}
 
               {!article.summary && !article.text && (
                 <div className="modal-summary">
