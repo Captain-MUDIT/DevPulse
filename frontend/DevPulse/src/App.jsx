@@ -200,7 +200,7 @@ function App() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <p>No articles found. Try adjusting your filters or check if the backend is running.</p>
+              <p>No articles found. Try adjusting your filters.</p>
               <button onClick={loadArticles} className="retry-button">
                 Refresh Articles
               </button>
