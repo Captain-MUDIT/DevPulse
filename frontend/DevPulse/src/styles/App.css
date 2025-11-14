@@ -128,7 +128,7 @@
 
 .category-feed {
   margin-top: 3rem;
-  scroll-margin-top: 200px; /* increased to match taller header + site heading */
+  scroll-margin-top: 200px; /* increased to match taller header + site heading on desktop */
 }
 
 /* Empty State */
@@ -152,5 +152,15 @@
   .section-title {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
+  }
+
+  .category-feed {
+    scroll-margin-top: 120px; /* smaller on tablet/mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .category-feed {
+    scroll-margin-top: 100px; /* even smaller on small mobile */
   }
 }
