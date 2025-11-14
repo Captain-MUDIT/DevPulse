@@ -127,9 +127,28 @@ function App() {
   // Scroll to search results when search term changes
   useEffect(() => {
     if (searchTerm && searchResultsRef.current) {
+      // Use a longer timeout to ensure DOM has fully updated with filtered results
       setTimeout(() => {
-        searchResultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+        const element = searchResultsRef.current;
+        if (element) {
+          // Calculate the scroll position accounting for sticky headers
+          const headerHeight = document.querySelector('.site-heading')?.offsetHeight || 100;
+          const navHeight = document.querySelector('.header')?.offsetHeight || 70;
+          const totalStickyHeight = headerHeight + navHeight + 10; // add 10px buffer
+          
+          // Get the element's position relative to the viewport and document
+          const elementRect = element.getBoundingClientRect();
+          const elementPosition = elementRect.top + window.scrollY - totalStickyHeight;
+          
+          console.log('Search scroll triggered:', { elementPosition, headerHeight, navHeight, totalStickyHeight });
+          
+          // Scroll to element with offset for sticky headers
+          window.scrollTo({
+            top: Math.max(0, elementPosition),
+            behavior: 'smooth'
+          });
+        }
+      }, 400);
     }
   }, [searchTerm]);
 
