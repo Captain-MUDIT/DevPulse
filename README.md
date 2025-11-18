@@ -1,7 +1,6 @@
-wwwwwwwwwwwwwwwwwwwwwwwww# DevPulse 🚀
+### Dev Pulse
 
-### 🔗 Live Demo
-https://devpulse-sigma.vercel.app
+[👉 Live Demo](https://devpulse-sigma.vercel.app)
 
 AI-powered news aggregation platform for tech enthusiasts, founders, and developers. Automatically collects, categorizes, and summarizes articles from 40+ RSS feeds using state-of-the-art NLP models.
 
